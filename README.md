@@ -1,6 +1,8 @@
  
 # Lambent Source GSI (LSG)
 
+[![Gitter](https://badges.gitter.im/Lambentri/community.svg)](https://gitter.im/Lambentri/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 A LambentAether4 machine producer that integrates with source engine Game State Integration
 
 ## CSGO
