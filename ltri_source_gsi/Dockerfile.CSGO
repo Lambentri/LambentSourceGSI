@@ -1,0 +1,19 @@
+FROM pypy:3.7-slim
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN apt-get update
+RUN apt-get -y install build-essential libssl-dev libffi-dev python3-dev
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+WORKDIR gsi
+
+EXPOSE 8015
+
+# recreates what pycharm does
+ENV PYTHONPATH "${PYTHONPATH}:./csgo"
+
+CMD [ "pypy3", "./csgo/csgo.py" ]

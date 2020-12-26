@@ -4,6 +4,8 @@ from enum import Enum
 from pydantic.dataclasses import dataclass
 from typing import Any, Dict
 
+from common.models import DefaultAuth, Provider
+
 
 class TeamEnum(Enum):
     CT = "CT"
@@ -140,15 +142,6 @@ class Player:
 
 
 @dataclass
-class Provider:
-    name: str
-    appid: int
-    version: int
-    steamid: str
-    timestamp: int
-
-
-@dataclass
 class Map:
     mode: ModeEnum
     name: str
@@ -161,11 +154,6 @@ class Map:
     souvenirs_total: int
 
     round_wins: Dict[str, WinCondition] = None
-
-
-@dataclass
-class DefaultAuth:
-    token: str
 
 
 @dataclass

@@ -4,7 +4,7 @@ import os
 from autobahn.twisted.component import Component, run
 from autobahn.wamp import RegisterOptions, PublishOptions
 from klein import Klein
-from pydantic.json import  pydantic_encoder
+from pydantic.json import pydantic_encoder
 from twisted.internet.defer import inlineCallbacks
 from twisted.web.http import Request
 from typing import Optional
@@ -107,19 +107,19 @@ def list_active_machine_instances():
             "cs-gsi-health-inv": Machine(
                 name="CSGO-GSI",
                 iname="HEALTH_INV",
-                id="ltri-csgo-gsi-health-inv",
+                id="ltri-csgo-gsi-armor-inv",
                 desc="Machine State for CSGO Health (inverted)"
             ),
             "cs-gsi-armor": Machine(
                 name="CSGO-GSI",
-                iname="HEALTH",
-                id="ltri-csgo-gsi-health",
+                iname="ARMOR",
+                id="ltri-csgo-gsi-armor",
                 desc="Machine State for CSGO Health"
             ),
             "cs-gsi-armor-inv": Machine(
                 name="CSGO-GSI",
-                iname="HEALTH_INV",
-                id="ltri-csgo-gsi-health-inv",
+                iname="ARMOR_INV",
+                id="ltri-csgo-gsi-armor-inv",
                 desc="Machine State for CSGO Health (inverted)"
             ),
             "cs-gsi-money": Machine(
@@ -139,7 +139,6 @@ def list_active_machine_instances():
     )
     # lol
     serialized = json.loads(json.dumps(schema, indent=4, default=pydantic_encoder))
-    # print(serialized)
     return serialized
 
 
@@ -169,5 +168,9 @@ def index(request: Request):
 if __name__ == "__main__":
     from twisted.web.server import Site
     from twisted.internet import reactor, task
+
+    import sys
+    print(sys.path)
+
     reactor.listenTCP(8015, Site(webapp.resource()))
     run([wamp_component])

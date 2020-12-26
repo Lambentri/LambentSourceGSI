@@ -18,7 +18,7 @@ class Machine:
     id: str
     desc: str
 
-    speed: str = "TENTHS"
+    speed: str = "FHUNDREDTHS"
     running: RunningEnum = RunningEnum.RUNNING
 
 @dataclass
