@@ -7,6 +7,7 @@ from common.models import DefaultAuth, Provider
 
 GOLD = [255, 128, 0]
 
+
 class Team(Enum):
     radiant = "radiant"
     dire = "dire"
@@ -25,6 +26,7 @@ class GameStateEnum(Enum):
     DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP = "DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP"
     DOTA_GAMERULES_STATE_WAIT_FOR_MAP_TO_LOAD = "DOTA_GAMERULES_STATE_WAIT_FOR_MAP_TO_LOAD"
     DOTA_GAMERULES_STATE_LAST = "DOTA_GAMERULES_STATE_LAST"
+
 
 @dataclass
 class Building:
@@ -86,14 +88,17 @@ class Map:
     customgamename: str
     ward_purchase_cooldown: int
 
+
 # @dataclass
 class Hero(BaseModel):
-    xpos: int
-    ypos: int
+
     id: int
     name: str
-    level: int
-    alive: bool
+
+    xpos: Optional[int]
+    ypos: Optional[int]
+    level: Optional[int]
+    alive: Optional[bool]
 
     respawn_seconds: int
     buyback_cost: int
@@ -144,13 +149,14 @@ class Hero(BaseModel):
         if not self.alive:
             return GOLD
         rg_value = (self.mana / self.max_mana) * 255.
-        return [int(255-rg_value/2), int(255-rg_value/2), 255]
+        return [int(255 - rg_value / 2), int(255 - rg_value / 2), 255]
 
     def mana_as_color_inv(self):
         if not self.alive:
             return GOLD
         b_value = (self.max_mana - self.mana) / self.max_mana * 255.
         return [0, 0, int(b_value)]
+
 
 @dataclass
 class Ability:
@@ -170,19 +176,20 @@ class Item:
     passive: Optional[bool] = None
     can_cast: Optional[bool] = None
     cooldown: Optional[int] = None
+    charges: Optional[int] = None
 
 
 @dataclass
 class GameState:
     auth: DefaultAuth
     provider: Provider
-
-    buildings: BuildingHolder
-    map: Map
     player: Player
-    hero: Hero
-    abilities: Dict[str, Ability]
-    items: Dict[str, Item]
     draft: Dict[str, Any]
-    wearables: Dict[str, int]
-    previously: Optional[Dict[str, Any]]
+
+    map: Optional[Map] = Field(default_factory=dict)
+    hero: Optional[Hero] = Field(default_factory=dict)
+    buildings: Optional[BuildingHolder] = Field(default_factory=dict)
+    abilities: Optional[Dict[str, Ability]] = Field(default_factory=dict)
+    items: Optional[Dict[str, Item]] = Field(default_factory=dict)
+    wearables: Optional[Dict[str, int]] = Field(default_factory=dict)
+    previously: Optional[Dict[str, Any]] = Field(default_factory=dict)

@@ -119,9 +119,7 @@ webapp = Klein()
 
 @webapp.route('/', methods=['POST'])
 def index(request: Request):
-    # print("h")
     content = json.loads(request.content.read())
-    # print(json.dumps(content, indent=3))
     try:
         new_state = GameState(**content)
 
@@ -130,10 +128,8 @@ def index(request: Request):
         print(e)
         return "wew"
 
-    # check for diffs
-    # print(json.dumps(content, indent=3))
-    # new_state
     wamp_component.state = new_state
+    print(wamp_component.state.map.game_state)
 
     return "ok"
 
