@@ -1,10 +1,11 @@
 from enum import Enum
 from typing import Dict, Any, Optional
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 from pydantic.dataclasses import dataclass
 from common.models import DefaultAuth, Provider
 
+GOLD = [255, 128, 0]
 
 class Team(Enum):
     radiant = "radiant"
@@ -12,18 +13,18 @@ class Team(Enum):
 
 
 class GameStateEnum(Enum):
-    DOTA_GAMERULES_STATE_INIT = 0
-    DOTA_GAMERULES_STATE_WAIT_FOR_PLAYERS_TO_LOAD = 1
-    DOTA_GAMERULES_STATE_HERO_SELECTION = 3
-    DOTA_GAMERULES_STATE_STRATEGY_TIME = 4
-    DOTA_GAMERULES_STATE_PRE_GAME = 7
-    DOTA_GAMERULES_STATE_GAME_IN_PROGRESS = 8
-    DOTA_GAMERULES_STATE_POST_GAME = 9
-    DOTA_GAMERULES_STATE_DISCONNECT = 10
-    DOTA_GAMERULES_STATE_TEAM_SHOWCASE = 5
-    DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP = 2
-    DOTA_GAMERULES_STATE_WAIT_FOR_MAP_TO_LOAD = 6
-    DOTA_GAMERULES_STATE_LAST = 0
+    DOTA_GAMERULES_STATE_INIT = "DOTA_GAMERULES_STATE_INIT"
+    DOTA_GAMERULES_STATE_WAIT_FOR_PLAYERS_TO_LOAD = "DOTA_GAMERULES_STATE_WAIT_FOR_PLAYERS_TO_LOAD"
+    DOTA_GAMERULES_STATE_HERO_SELECTION = "DOTA_GAMERULES_STATE_HERO_SELECTION"
+    DOTA_GAMERULES_STATE_STRATEGY_TIME = "DOTA_GAMERULES_STATE_STRATEGY_TIME"
+    DOTA_GAMERULES_STATE_PRE_GAME = "DOTA_GAMERULES_STATE_PRE_GAME"
+    DOTA_GAMERULES_STATE_GAME_IN_PROGRESS = "DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"
+    DOTA_GAMERULES_STATE_POST_GAME = "DOTA_GAMERULES_STATE_POST_GAME"
+    DOTA_GAMERULES_STATE_DISCONNECT = "DOTA_GAMERULES_STATE_DISCONNECT"
+    DOTA_GAMERULES_STATE_TEAM_SHOWCASE = "DOTA_GAMERULES_STATE_TEAM_SHOWCASE"
+    DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP = "DOTA_GAMERULES_STATE_CUSTOM_GAME_SETUP"
+    DOTA_GAMERULES_STATE_WAIT_FOR_MAP_TO_LOAD = "DOTA_GAMERULES_STATE_WAIT_FOR_MAP_TO_LOAD"
+    DOTA_GAMERULES_STATE_LAST = "DOTA_GAMERULES_STATE_LAST"
 
 @dataclass
 class Building:
@@ -34,7 +35,7 @@ class Building:
 @dataclass
 class BuildingHolder:
     radiant: Dict[str, Building]
-    dire: Dict[str, Building]
+    # dire: Dict[str, Building] = Field(default_factory=lambda x: {})
 
 
 @dataclass
@@ -85,9 +86,8 @@ class Map:
     customgamename: str
     ward_purchase_cooldown: int
 
-
-@dataclass
-class Hero:
+# @dataclass
+class Hero(BaseModel):
     xpos: int
     ypos: int
     id: int
@@ -128,19 +128,27 @@ class Hero:
     break_: bool = Field(False, alias="break")
 
     def health_as_color(self):
+        if not self.alive:
+            return GOLD
         bg_value = (self.health / self.max_health) * 255.
         return [255, int(bg_value), int(bg_value)]
 
     def health_as_color_inv(self):
+        if not self.alive:
+            return GOLD
         r_value = (self.max_health - self.health) / self.max_health * 255.
         return [int(r_value), 0, 0]
 
     # mana
     def mana_as_color(self):
+        if not self.alive:
+            return GOLD
         rg_value = (self.mana / self.max_mana) * 255.
-        return [int(rg_value), 255, int(rg_value)]
+        return [int(255-rg_value/2), int(255-rg_value/2), 255]
 
     def mana_as_color_inv(self):
+        if not self.alive:
+            return GOLD
         b_value = (self.max_mana - self.mana) / self.max_mana * 255.
         return [0, 0, int(b_value)]
 
@@ -158,8 +166,10 @@ class Ability:
 @dataclass
 class Item:
     name: str
-    purchaser: Optional[int]
-    passive: Optional[bool]
+    purchaser: Optional[int] = None
+    passive: Optional[bool] = None
+    can_cast: Optional[bool] = None
+    cooldown: Optional[int] = None
 
 
 @dataclass

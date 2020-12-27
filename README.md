@@ -62,4 +62,4 @@ After copying the config into the game cfg folder, run the relevant server as so
 
 ### DOTA2
 
-`docker run --rm -d --network host --name ltri-gsi-dota2 -P -e LA4_XBAR_ROUTER=ws://192.168.1.1:8083/ws lambentri-gsi-dota2`
+`docker run --rm -d --network host --name ltri-gsi-dota2 -P -e LA4_XBAR_ROUTER=ws://192.168.1.1:8083/ws ltri-gsi-dota2`

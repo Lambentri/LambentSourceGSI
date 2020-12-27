@@ -13,5 +13,5 @@ class Provider:
     name: str
     appid: int
     version: int
-    steamid: Optional[str]
     timestamp: int
+    steamid: Optional[str] = None
